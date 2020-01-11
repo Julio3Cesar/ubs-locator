@@ -15,4 +15,40 @@ public class Scores {
     private Integer adaptation_for_seniors;
     private Integer medical_equipment;
     private Integer medicine;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public Integer getAdaptation_for_seniors() {
+        return adaptation_for_seniors;
+    }
+
+    public void setAdaptation_for_seniors(Integer adaptation_for_seniors) {
+        this.adaptation_for_seniors = adaptation_for_seniors;
+    }
+
+    public Integer getMedical_equipment() {
+        return medical_equipment;
+    }
+
+    public void setMedical_equipment(Integer medical_equipment) {
+        this.medical_equipment = medical_equipment;
+    }
+
+    public Integer getMedicine() {
+        return medicine;
+    }
+
+    public void setMedicine(Integer medicine) {
+        this.medicine = medicine;
+    }
 }
