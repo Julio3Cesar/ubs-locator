@@ -1,7 +1,7 @@
-package br.com.test.ubs.component;
+package br.com.test.ubs.jobs.mappers;
 
 import br.com.test.ubs.models.GeoCode;
-import br.com.test.ubs.models.Scores;
+import br.com.test.ubs.models.Score;
 import br.com.test.ubs.models.Ubs;
 import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
@@ -16,11 +16,11 @@ public class UbsFieldMapper implements FieldSetMapper<Ubs> {
         geoCode.setLat(fieldSet.readDouble("vlr_latitude"));
         geoCode.setLon(fieldSet.readDouble("vlr_longitude"));
 
-        Scores scores = new Scores();
-        scores.setAdaptation_for_seniors(scroreAttributesConverter(fieldSet.readString("dsc_adap_defic_fisic_idosos")));
-        scores.setMedical_equipment(scroreAttributesConverter(fieldSet.readString("dsc_equipamentos")));
-        scores.setMedicine(scroreAttributesConverter(fieldSet.readString("dsc_medicamentos")));
-        scores.setSize(scroreAttributesConverter(fieldSet.readString("dsc_estrut_fisic_ambiencia")));
+        Score score = new Score();
+        score.setAdaptation_for_seniors(scoreAttributesConverter(fieldSet.readString("dsc_adap_defic_fisic_idosos")));
+        score.setMedical_equipment(scoreAttributesConverter(fieldSet.readString("dsc_equipamentos")));
+        score.setMedicine(scoreAttributesConverter(fieldSet.readString("dsc_medicamentos")));
+        score.setSize(scoreAttributesConverter(fieldSet.readString("dsc_estrut_fisic_ambiencia")));
 
         Ubs ubs = new Ubs();
         ubs.setName(fieldSet.readString("nom_estab"));
@@ -28,11 +28,11 @@ public class UbsFieldMapper implements FieldSetMapper<Ubs> {
         ubs.setAddress(fieldSet.readString("dsc_endereco"));
         ubs.setCity(fieldSet.readString("dsc_cidade"));
         ubs.setGeoCode(geoCode);
-        ubs.setScores(scores);
+        ubs.setScore(score);
         return ubs;
     }
 
-    private Integer scroreAttributesConverter(String attributeValue) {
+    private Integer scoreAttributesConverter(String attributeValue) {
         if (attributeValue.equals("Desempenho mediano ou  um pouco abaixo da média")) {
             return 1;
         } else if (attributeValue.equals("Desempenho acima da média")) {

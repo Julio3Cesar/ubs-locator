@@ -14,6 +14,14 @@ public class GeoCode {
     private Double lat;
     private Double lon;
 
+    public GeoCode(Double latitude, Double longitude) {
+        this.lat = latitude;
+        this.lon = longitude;
+    }
+
+    public GeoCode() {
+    }
+
     public Long getId() {
         return id;
     }

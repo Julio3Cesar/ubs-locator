@@ -1,9 +1,8 @@
 package br.com.test.ubs.configurations;
 
-import br.com.test.ubs.component.UbsFieldMapper;
+import br.com.test.ubs.jobs.mappers.UbsFieldMapper;
 import br.com.test.ubs.listeners.CustomJobListener;
 import br.com.test.ubs.models.Ubs;
-import br.com.test.ubs.processor.UbsItemProcessor;
 import br.com.test.ubs.repositories.UbsRepository;
 import org.springframework.batch.core.Job;
 
@@ -13,7 +12,6 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 
 import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
@@ -24,10 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.List;
-import java.util.function.Function;
 
 @Configuration
 public class BatchConfiguration {
@@ -47,7 +41,7 @@ public class BatchConfiguration {
     @Bean
     public FlatFileItemReader<Ubs> reader() {
         String[] headerNames = new String[]{"vlr_latitude", "vlr_longitude", "cod_munic", "cod_cnes", "nom_estab",
-                "dsc_endereco", "dsc_bairro","dsc_cidade", "dsc_telefone", "dsc_estrut_fisic_ambiencia",
+                "dsc_endereco", "dsc_bairro", "dsc_cidade", "dsc_telefone", "dsc_estrut_fisic_ambiencia",
                 "dsc_adap_defic_fisic_idosos", "dsc_equipamentos", "dsc_medicamentos"};
         return new FlatFileItemReaderBuilder<Ubs>()
                 .name("ubsItemReader")
@@ -65,7 +59,7 @@ public class BatchConfiguration {
     @Bean
     public LineMapper<Ubs> lineMapper() {
         String[] headerNames = new String[]{"vlr_latitude", "vlr_longitude", "cod_munic", "cod_cnes", "nom_estab",
-                "dsc_endereco", "dsc_bairro","dsc_cidade", "dsc_telefone", "dsc_estrut_fisic_ambiencia",
+                "dsc_endereco", "dsc_bairro", "dsc_cidade", "dsc_telefone", "dsc_estrut_fisic_ambiencia",
                 "dsc_adap_defic_fisic_idosos", "dsc_equipamentos", "dsc_medicamentos"};
         final DefaultLineMapper<Ubs> defaultLineMapper = new DefaultLineMapper<>();
         final DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
@@ -80,11 +74,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public UbsItemProcessor processor() {
-        return new UbsItemProcessor();
-    }
-
-    @Bean
     public RepositoryItemWriter<Ubs> writer() {
         RepositoryItemWriter<Ubs> repositoryItemWriter = new RepositoryItemWriter();
         repositoryItemWriter.setRepository(ubsRepository);
@@ -95,15 +84,13 @@ public class BatchConfiguration {
     @Bean
     public Step step1(RepositoryItemWriter<Ubs> writer) {
         return stepBuilderFactory.get("step1")
-                .<Ubs, Ubs> chunk(10)
+                .<Ubs, Ubs>chunk(10)
                 .reader(reader())
-                .processor(processor())
                 .writer(writer)
                 .build();
     }
 
     @Bean
-    @Scheduled(cron = "* * * * *")
     public Job job(CustomJobListener listener, Step step) {
         return jobBuilderFactory.get("ubsProcessJob")
                 .incrementer(new RunIdIncrementer())

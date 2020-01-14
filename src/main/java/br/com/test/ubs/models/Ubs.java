@@ -17,7 +17,19 @@ public class Ubs {
     private GeoCode geoCode;
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "scores_id")
-    private Scores scores;
+    private Score score;
+
+    public Ubs() {
+    }
+
+    public Ubs(String name, String address, String city, String phone, GeoCode geoCode, Score score) {
+        this.name = name;
+        this.address = address;
+        this.city = city;
+        Phone = phone;
+        this.geoCode = geoCode;
+        this.score = score;
+    }
 
     public Long getId() {
         return id;
@@ -63,11 +75,11 @@ public class Ubs {
         this.geoCode = geoCode;
     }
 
-    public Scores getScores() {
-        return scores;
+    public Score getScore() {
+        return score;
     }
 
-    public void setScores(Scores scores) {
-        this.scores = scores;
+    public void setScore(Score score) {
+        this.score = score;
     }
 }
