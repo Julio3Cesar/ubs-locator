@@ -2,6 +2,9 @@ package br.com.test.ubs.controllers;
 
 import br.com.test.ubs.models.GeoCode;
 import br.com.test.ubs.services.UbsService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,10 +22,12 @@ public class UBSController {
     @Autowired
     private UbsService ubsService;
 
-    @GetMapping(value = "v1/find_ubs")
+    @ApiOperation(value = "Return all Ubs's within radius 5km")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Return a page of UBS's")})
+    @GetMapping(value = "v1/find_ubs", produces = "application/json")
     public Page<?> show(@RequestParam Double latitude,
-                          @RequestParam Double longitude,
-                          final Pageable pageable) {
+                        @RequestParam Double longitude,
+                        final Pageable pageable) {
         List<?> nearbyUbs = ubsService.nearbyUbs(new GeoCode(latitude, longitude));
         return paginate(nearbyUbs, pageable);
     }
